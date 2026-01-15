@@ -1,0 +1,42 @@
+﻿using Domain.Entities;
+using Domain.IRepositories;
+using Infrastructure.DataBase;
+using Microsoft.EntityFrameworkCore;
+
+namespace Infrastructure.Repositories
+{
+    public class OrderRepository : IOrderRepository
+    {
+        public readonly AppDbContext _context;
+
+        public OrderRepository(AppDbContext context)
+        {
+            _context = context;
+        }
+
+        public async Task<Order?> GetAsync(Guid id)
+        {
+            return await _context.Orders.FindAsync(id);
+        }
+
+        public async Task SaveAsync(Guid customerId, string article, decimal totalAmount)
+        {
+            var customer = await _context.Customers.FirstOrDefaultAsync(x => x.Id == customerId) ?? throw new Exception("Customer not found");
+
+            if (totalAmount <= 0)
+            {
+                throw new Exception("Total amount must be greater than zero");
+            }
+
+            var order = new Order
+            {
+                Article = article,
+                TotalAmount = totalAmount,
+                Customer = customer
+            };
+
+            await _context.Orders.AddAsync(order);
+            await _context.SaveChangesAsync();
+        }
+    }
+}
