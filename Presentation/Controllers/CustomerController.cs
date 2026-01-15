@@ -17,18 +17,11 @@ namespace Presentation.Controllers
             _customerService = customerService;
         }
 
-        [HttpGet(Name = "GetCustomer")]
-        public async Task<CustomerDto?> Get(Guid id)
+        [HttpGet(Name = "GetCustomers")]
+        public async Task<List<CustomerDto>> Get()
         {
-            var response = await _customerService.GetAsync(id);
-            if (response == null)
-            {
-                _logger.LogWarning("Customer with ID {CustomerId} not found.", id);
-                Response.StatusCode = 404;
-                return null;
-            }
+            var response = await _customerService.GetAllAsync();
             return response;
-
         }
 
         [HttpPost(Name = "CreateCustomer")]
@@ -38,6 +31,36 @@ namespace Presentation.Controllers
             try
             {
                 await _customerService.CreateAsync(dto);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+            return Ok();
+        }
+
+        [HttpDelete(Name = "DeleteCustomer")]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            _logger.LogInformation("DeleteCustomer endpoint called.");
+            try
+            {
+                await _customerService.DeleteAsync(id);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+            return Ok();
+        }
+
+        [HttpPut(Name = "UpdateCustomer")]
+        public async Task<IActionResult> Put([FromBody] CustomerDto dto)
+        {
+            _logger.LogInformation("UpdateCustomer endpoint called.");
+            try
+            {
+                await _customerService.UpdateAsync(dto);
             }
             catch (Exception ex)
             {

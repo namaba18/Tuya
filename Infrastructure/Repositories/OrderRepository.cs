@@ -19,7 +19,12 @@ namespace Infrastructure.Repositories
             return await _context.Orders.FindAsync(id);
         }
 
-        public async Task SaveAsync(Guid customerId, string article, decimal totalAmount)
+        public async Task<List<Order>> GetAllAsync()
+        {
+            return await _context.Orders.ToListAsync();
+        }
+
+        public async Task CreateAsync(Guid customerId, string article, decimal totalAmount)
         {
             var customer = await _context.Customers.FirstOrDefaultAsync(x => x.Id == customerId) ?? throw new Exception("Customer not found");
 
@@ -28,12 +33,7 @@ namespace Infrastructure.Repositories
                 throw new Exception("Total amount must be greater than zero");
             }
 
-            var order = new Order
-            {
-                Article = article,
-                TotalAmount = totalAmount,
-                Customer = customer
-            };
+            var order = new Order(article, totalAmount, customer);            
 
             await _context.Orders.AddAsync(order);
             await _context.SaveChangesAsync();

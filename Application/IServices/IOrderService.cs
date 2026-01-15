@@ -4,7 +4,8 @@ namespace Application.IServices
 {
     public interface IOrderService
     {
-        Task<OrderDto?> GetOrderAsync(Guid id);
-        Task CreateOrderAsync(CreateOrderDto dto);
+        Task<OrderDto?> GetAsync(Guid id);
+        Task<List<OrderDto>> GetAllAsync();
+        Task CreateAsync(CreateOrderDto dto);
     }
 }

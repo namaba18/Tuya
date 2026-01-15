@@ -20,7 +20,7 @@ namespace Presentation.Controllers
         [HttpGet(Name = "GetOrder")]
         public async Task<OrderDto?> Get(Guid id)
         {
-            var response = await _orderService.GetOrderAsync(id);
+            var response = await _orderService.GetAsync(id);
             if (response == null)
             {
                 _logger.LogWarning("Order with ID {OrderId} not found.", id);
@@ -37,7 +37,7 @@ namespace Presentation.Controllers
             _logger.LogInformation("CreateOrder endpoint called.");
             try
             {
-                await _orderService.CreateOrderAsync(createOrderDto);
+                await _orderService.CreateAsync(createOrderDto);
             }
             catch (Exception ex)
             {

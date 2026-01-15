@@ -13,7 +13,7 @@ namespace Application.Services
             _orderRepository = orderRepository;
         }
 
-        public async Task<OrderDto?> GetOrderAsync(Guid id)
+        public async Task<OrderDto?> GetAsync(Guid id)
         {
             var order = await _orderRepository.GetAsync(id);
             if (order != null)
@@ -34,9 +34,28 @@ namespace Application.Services
             }
         }
 
-        public async Task CreateOrderAsync(CreateOrderDto dto)
+        public async Task<List<OrderDto>> GetAllAsync()
         {
-            await _orderRepository.SaveAsync(dto.CustomerId, dto.Article, dto.TotalAmount);
+            var orders = await _orderRepository.GetAllAsync();
+            List<OrderDto> orderDtos = new List<OrderDto>();
+            foreach (var order in orders)
+            {
+                orderDtos.Add(new OrderDto
+                {
+                    Id = order.Id,
+                    Article = order.Article,
+                    TotalAmount = order.TotalAmount,
+                    CustomerName = order.Customer.Name,
+                    CustomerEmail = order.Customer.Email,
+                    CustomerPhoneNumber = order.Customer.PhoneNumber
+                });
+            }
+            return orderDtos;             
+        }
+
+        public async Task CreateAsync(CreateOrderDto dto)
+        {
+            await _orderRepository.CreateAsync(dto.CustomerId, dto.Article, dto.TotalAmount);
         }
     }
 }

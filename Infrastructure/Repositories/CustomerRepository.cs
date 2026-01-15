@@ -13,20 +13,38 @@ namespace Infrastructure.Repositories
         {
             _context = context;
         }
+                
+        public async Task<ICollection<Customer>> GetAllAsync()
+        {
+            return await _context.Customers.ToListAsync();
+        }
 
         public async Task<Customer?> GetAsync(Guid id)
         {
             return await _context.Customers.FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task SaveAsync(string name, string email, string phone)
+        public async Task DeleteAsync(Guid id)
         {
-            var customer = new Customer
-            {
-                Name = name,
-                Email = email,
-                PhoneNumber = phone
-            };
+            Customer? customer = await _context.Customers.FirstOrDefaultAsync(x => x.Id == id) ?? throw new Exception("Customer not found");
+            _context.Customers.Remove(customer);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateAsync(Guid id, string name, string email, string phone)
+        {
+            Customer? customer = await _context.Customers.FirstOrDefaultAsync(x => x.Id == id) ?? throw new Exception("Customer not found");
+            customer.Name = name;
+            customer.Email = email;
+            customer.PhoneNumber = phone;
+            _context.Customers.Update(customer);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task CreateAsync(string name, string email, string phone)
+        {
+            var customer = new Customer(name, email, phone);
+            
             await _context.Customers.AddAsync(customer);
             await _context.SaveChangesAsync();
         }
