@@ -27,6 +27,10 @@ namespace Infrastructure.Repositories
         public async Task DeleteAsync(Guid id)
         {
             Customer? customer = await _context.Customers.FirstOrDefaultAsync(x => x.Id == id) ?? throw new Exception("Customer not found");
+            if (_context.Orders.Any(o => o.Customer == customer))
+            {
+                throw new Exception("The customer has an associated invoice, therefore it cannot be deleted.");
+            }
             _context.Customers.Remove(customer);
             await _context.SaveChangesAsync();
         }

@@ -57,5 +57,15 @@ namespace Application.Services
         {
             await _orderRepository.CreateAsync(dto.CustomerId, dto.Article, dto.TotalAmount);
         }
+
+        public async Task UpdateAsync(OrderDto dto)
+        {
+            await _orderRepository.UpdateAsync(dto.Id, dto.Article, dto.TotalAmount);
+        }
+
+        public async Task DeleteAsync(Guid id)
+        {
+            await _orderRepository.DeleteAsync(id);
+        }
     }
 }

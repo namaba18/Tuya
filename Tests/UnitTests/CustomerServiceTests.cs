@@ -5,7 +5,7 @@ using Infrastructure.DataBase;
 using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 
-namespace Tests
+namespace Tests.UnitTests
 {
     public class CustomerServiceTests
     {

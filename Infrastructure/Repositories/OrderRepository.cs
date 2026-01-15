@@ -38,5 +38,25 @@ namespace Infrastructure.Repositories
             await _context.Orders.AddAsync(order);
             await _context.SaveChangesAsync();
         }
+
+        public async Task UpdateAsync(Guid id, string article, decimal totalAmount)
+        {
+            Order? order = await _context.Orders.FirstOrDefaultAsync(x => x.Id == id) ?? throw new Exception("Order not found");
+            if (totalAmount <= 0)
+            {
+                throw new Exception("Total amount must be greater than zero");
+            }
+            order.Article = article;
+            order.TotalAmount = totalAmount;
+            _context.Orders.Update(order);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteAsync(Guid id)
+        {
+            Order? order = await _context.Orders.FirstOrDefaultAsync(x => x.Id == id) ?? throw new Exception("Order not found");
+            _context.Orders.Remove(order);
+            await _context.SaveChangesAsync();
+        }
     }
 }
