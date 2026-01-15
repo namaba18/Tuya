@@ -3,11 +3,11 @@ using System.Net;
 
 namespace Tests.IntegrationTests
 {
-    public class OrderTests : IClassFixture<CustomWebApplicationFactory<Program>>
+    public class OrderControllerTests : IClassFixture<CustomWebApplicationFactory<Program>>
     {
         private readonly HttpClient _client;
 
-        public OrderTests(CustomWebApplicationFactory<Program> factory)
+        public OrderControllerTests(CustomWebApplicationFactory<Program> factory)
         {
             _client = factory.CreateClient(new WebApplicationFactoryClientOptions
             {
