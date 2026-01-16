@@ -20,8 +20,16 @@ namespace Presentation.Controllers
         [HttpGet(Name = "GetCustomers")]
         public async Task<List<CustomerDto>> Get()
         {
-            var response = await _customerService.GetAllAsync();
-            return response;
+            try
+            {
+                var response = await _customerService.GetAllAsync();
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while fetching customers.");
+                return new List<CustomerDto>();
+            }
         }
 
         [HttpPost(Name = "CreateCustomer")]

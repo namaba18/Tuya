@@ -20,7 +20,7 @@ namespace Tests.IntegrationTests
         {
             var response = await _client.GetAsync("/Order");
 
-            Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
     }
 }

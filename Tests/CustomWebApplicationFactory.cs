@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using System.Data.Common;
 
 
@@ -27,7 +28,6 @@ namespace Tests
 
                 services.Remove(dbConnectionDescriptor);
 
-                // Create open SqliteConnection so EF won't automatically close it.
                 services.AddSingleton<DbConnection>(container =>
                 {
                     var connection = new SqliteConnection("DataSource=:memory:");
@@ -40,10 +40,25 @@ namespace Tests
                 {
                     var connection = container.GetRequiredService<DbConnection>();
                     options.UseSqlite(connection);
-                });
+                });               
             });
 
             builder.UseEnvironment("Development");
+        }
+
+        protected override IHost CreateHost(IHostBuilder builder)
+        {
+            var host = builder.Build();
+
+            
+            using (var scope = host.Services.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                db.Database.EnsureCreated();
+            }
+
+            host.Start();
+            return host;
         }
     }
 }
