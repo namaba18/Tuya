@@ -28,7 +28,6 @@ namespace Presentation.Controllers
                 return null;
             }
             return response;
-
         }
 
         [HttpPost(Name = "CreateOrder")]
@@ -38,6 +37,36 @@ namespace Presentation.Controllers
             try
             {
                 await _orderService.CreateAsync(createOrderDto);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+            return Ok();
+        } 
+
+        [HttpPut(Name = "UpdateOrder")]
+        public async Task<IActionResult> Put([FromBody] OrderDto dto)
+        {
+            _logger.LogInformation("UpdateOrder endpoint called.");
+            try
+            {
+                await _orderService.UpdateAsync(dto);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+            return Ok();
+        }
+
+        [HttpDelete(Name = "DeleteOrder")]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            _logger.LogInformation("DeleteOrder endpoint called.");
+            try
+            {
+                await _orderService.DeleteAsync(id);
             }
             catch (Exception ex)
             {

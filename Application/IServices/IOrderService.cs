@@ -7,5 +7,7 @@ namespace Application.IServices
         Task<OrderDto?> GetAsync(Guid id);
         Task<List<OrderDto>> GetAllAsync();
         Task CreateAsync(CreateOrderDto dto);
+        Task UpdateAsync(OrderDto dto);
+        Task DeleteAsync(Guid id);
     }
 }
