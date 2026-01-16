@@ -32,7 +32,6 @@ namespace Tests.IntegrationTests
         [Fact]
         public async Task PostCustomer_ReturnsSuccessStatusCode()
         {
-            // Arrange
             var dto = new CreateCustomerDto
             {
                 Name = "Test Customer",
@@ -42,10 +41,8 @@ namespace Tests.IntegrationTests
 
             var content = JsonContent.Create(dto);
 
-            // Act
             var response = await _client.PostAsync("/Customer", content);
 
-            // Assert
             response.EnsureSuccessStatusCode();
              
             using var scope = _factory.Services.CreateScope();
